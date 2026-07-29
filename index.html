@@ -39,9 +39,9 @@
   @keyframes scintille{0%,100%{opacity:.12;filter:blur(220px);}50%{opacity:.28;filter:blur(180px);}}
 
   /* anneaux de pulse (même que starting) */
-  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 5.5s cubic-bezier(0.19,1,0.22,1) infinite backwards;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
-  .pulse-ring:nth-child(4){animation-delay:1.83s;}
-  .pulse-ring:nth-child(5){animation-delay:3.67s;}
+  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 8s cubic-bezier(0.19,1,0.22,1) infinite;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
+  .pulse-ring:nth-child(4){animation-delay:-2.67s;}
+  .pulse-ring:nth-child(5){animation-delay:-5.33s;}
   @keyframes pulseRing{0%{transform:scale(.3);opacity:.5}40%{opacity:.32}100%{transform:scale(2);opacity:0}}
 
   /* scan line */
@@ -60,8 +60,9 @@
   /* ligne séparatrice */
   .sep{width:600px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);box-shadow:var(--glow-v);}
 
-  /* ── GRILLE PLANNING ── */
-  .planning{display:flex;flex-wrap:wrap;gap:22px;align-items:stretch;justify-content:center;max-width:1150px;}
+  /* ── GRILLE PLANNING — 2 rangées empilées ── */
+  .planning-wrap{display:flex;flex-direction:column;gap:22px;align-items:center;}
+  .planning{display:flex;gap:22px;align-items:stretch;justify-content:center;}
 
   /* ══════════════════════
      CARTE JOUR
@@ -161,8 +162,11 @@
 
     <div class="sep"></div>
 
-    <!-- ══ PLANNING — généré par JS ══ -->
-    <div class="planning" id="planning"></div>
+    <!-- ══ PLANNING — généré par JS, réparti sur 2 rangées (3 + 4) ══ -->
+    <div class="planning-wrap">
+      <div class="planning" id="planning-row-1"></div>
+      <div class="planning" id="planning-row-2"></div>
+    </div>
   </div>
 
   <div class="bottom-name">AULIT42369 &nbsp;·&nbsp; TWITCH.TV</div>
@@ -246,10 +250,11 @@ const PLANNING = [
 const JOURS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
 const aujourdhui = JOURS[new Date().getDay()];
 
-/* ── Génération des cartes ── */
-const container = document.getElementById('planning');
+/* ── Génération des cartes, réparties 3 + 4 sur deux rangées ── */
+const row1 = document.getElementById('planning-row-1');
+const row2 = document.getElementById('planning-row-2');
 
-PLANNING.forEach(item => {
+function renderCard(item, container) {
   const isToday = item.day === aujourdhui;
   const card = document.createElement('div');
   card.className = 'card' + (item.on ? '' : ' off');
@@ -293,7 +298,10 @@ PLANNING.forEach(item => {
   }
 
   container.appendChild(card);
-});
+}
+
+PLANNING.slice(0, 3).forEach(item => renderCard(item, row1));
+PLANNING.slice(3).forEach(item => renderCard(item, row2));
 
 /* ── Mise à l'échelle responsive : garde le rendu 1920x1080
    identique en hauteur. Sur un écran plus large que 16:9 (PC), le
