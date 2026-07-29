@@ -39,10 +39,10 @@
   @keyframes scintille{0%,100%{opacity:.12;filter:blur(220px);}50%{opacity:.28;filter:blur(180px);}}
 
   /* anneaux de pulse (même que starting) */
-  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 3.5s cubic-bezier(0.16,1,0.3,1) infinite;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
-  .pulse-ring:nth-child(4){animation-delay:1.15s;}
-  .pulse-ring:nth-child(5){animation-delay:2.3s;}
-  @keyframes pulseRing{0%{transform:scale(.3);opacity:.55}60%{opacity:.22}100%{transform:scale(2);opacity:0}}
+  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 5.5s cubic-bezier(0.19,1,0.22,1) infinite;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
+  .pulse-ring:nth-child(4){animation-delay:1.83s;}
+  .pulse-ring:nth-child(5){animation-delay:3.67s;}
+  @keyframes pulseRing{0%{transform:scale(.3);opacity:.5}40%{opacity:.32}100%{transform:scale(2);opacity:0}}
 
   /* scan line */
   .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,.6),transparent);animation:scanMove 5s linear infinite;z-index:1;}
@@ -61,7 +61,7 @@
   .sep{width:600px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);box-shadow:var(--glow-v);}
 
   /* ── GRILLE PLANNING ── */
-  .planning{display:flex;gap:18px;align-items:stretch;}
+  .planning{display:flex;flex-wrap:wrap;gap:22px;align-items:stretch;justify-content:center;max-width:1150px;}
 
   /* ══════════════════════
      CARTE JOUR
@@ -69,7 +69,7 @@
   ══════════════════════ */
   .card{
     position:relative;
-    width:220px;
+    width:260px;
     background:linear-gradient(180deg,#0d1220,#080c18);
     border:1px solid #1a2540;
     overflow:hidden;
@@ -94,40 +94,40 @@
 
   /* header carte */
   .card-head{
-    padding:16px 18px 12px;
+    padding:20px 22px 16px;
     border-bottom:1px solid #1a2540;
     flex-shrink:0;
   }
   .card-day{
     font-family:'Orbitron',sans-serif;
-    font-size:.75rem;font-weight:900;
-    color:var(--white);letter-spacing:.1em;
+    font-size:1rem;font-weight:900;
+    color:var(--white);letter-spacing:.08em;
     text-transform:uppercase;
   }
   .card-date{
-    font-size:.58rem;letter-spacing:.2em;
+    font-size:.76rem;letter-spacing:.15em;
     color:var(--card-color);
     text-shadow:0 0 8px var(--card-color);
-    margin-top:3px;text-transform:uppercase;
+    margin-top:5px;text-transform:uppercase;
   }
 
   /* body carte */
-  .card-body{padding:14px 18px;display:flex;flex-direction:column;gap:10px;flex:1;}
-  .card-row{display:flex;align-items:center;gap:10px;}
-  .card-icon{font-size:.9rem;flex-shrink:0;width:20px;text-align:center;}
-  .card-info{font-size:.68rem;color:#8892a8;line-height:1.4;}
-  .card-info strong{color:var(--white);display:block;font-size:.72rem;letter-spacing:.05em;}
+  .card-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px;flex:1;}
+  .card-row{display:flex;align-items:center;gap:12px;}
+  .card-icon{font-size:1.15rem;flex-shrink:0;width:24px;text-align:center;}
+  .card-info{font-size:.82rem;color:#8892a8;line-height:1.4;}
+  .card-info strong{color:var(--white);display:block;font-size:.9rem;letter-spacing:.03em;}
 
   /* badge OFF */
   .card.off{opacity:.45;}
   .card.off .card-body{align-items:center;justify-content:center;}
-  .off-label{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;}
+  .off-label{font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;}
 
   /* badge AUJOURD'HUI */
   .badge-today{
     display:inline-block;
-    font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;
-    padding:3px 8px;margin-top:5px;
+    font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;
+    padding:4px 10px;margin-top:8px;
     background:var(--card-color);
     color:var(--bg);
     font-family:'Orbitron',sans-serif;font-weight:700;
@@ -135,7 +135,7 @@
   }
 
   /* barre de progression déco bas de carte */
-  .card-prog{height:2px;background:#1a2540;margin:0 18px 14px;border-radius:2px;overflow:hidden;}
+  .card-prog{height:2px;background:#1a2540;margin:0 22px 18px;border-radius:2px;overflow:hidden;}
   .card-prog-fill{height:100%;width:100%;transform-origin:left center;background:linear-gradient(90deg,var(--violet),var(--card-color));box-shadow:0 0 6px var(--card-color);animation:fillAnim 4.5s cubic-bezier(0.45,0,0.55,1) infinite alternate;will-change:transform;}
   @keyframes fillAnim{0%{transform:scaleX(.15)}50%{transform:scaleX(.55)}100%{transform:scaleX(.92)}}
 
@@ -296,32 +296,23 @@ PLANNING.forEach(item => {
 });
 
 /* ── Mise à l'échelle responsive : garde le rendu 1920x1080
-   identique en hauteur. Sur un écran plus large que 16:9 (PC),
-   les cartes s'écartent pour combler la largeur au lieu de laisser
-   du vide sur les côtés ; sur un écran plus étroit (téléphone), on
-   revient au calage classique pour ne jamais déborder. ── */
+   identique en hauteur. Sur un écran plus large que 16:9 (PC), le
+   canevas s'élargit pour combler les côtés (la grille de cartes se
+   centre et passe sur 2 lignes toute seule si besoin) ; sur un
+   écran plus étroit (téléphone), on revient au calage classique
+   pour ne jamais déborder. ── */
 function fitScreen(){
   const screen = document.querySelector('.screen');
-  const planning = document.getElementById('planning');
   const vw = window.innerWidth, vh = window.innerHeight;
   const scaleH = vh / 1080;
   const scaleW = vw / 1920;
 
   if (scaleW > scaleH) {
-    const logicalWidth = vw / scaleH;
-    screen.style.width = logicalWidth + 'px';
+    screen.style.width = (vw / scaleH) + 'px';
     screen.style.transform = `scale(${scaleH})`;
-    const cardCount = planning.children.length;
-    if (cardCount > 1) {
-      const cardsTotalWidth = cardCount * 220;
-      const extraSpace = Math.max(0, logicalWidth - 160 - cardsTotalWidth);
-      const newGap = extraSpace / (cardCount - 1);
-      planning.style.gap = Math.min(Math.max(newGap, 18), 70) + 'px';
-    }
   } else {
     screen.style.width = '1920px';
     screen.style.transform = `scale(${Math.min(scaleW, scaleH)})`;
-    planning.style.gap = '18px';
   }
 }
 window.addEventListener('resize', fitScreen);
