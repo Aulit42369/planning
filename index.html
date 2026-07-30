@@ -17,52 +17,52 @@
   :root {
     --bg:#070a10; --cyan:#00f5ff; --violet:#9b5cff; --magenta:#ff2d78;
     --white:#e8eaf6; --dim:#4a5568;
-    --glow-c:0 0 8 px #00f5ff,0 0 24 px #00f5ff55;
-    --glow-v:0 0 8 px #9b5cff,0 0 24 px #9b5cff55;
-    --glow-m:0 0 8 px #ff2d78,0 0 24 px #ff2d7855;
+    --glow-c:0 0 8px #00f5ff,0 0 24px #00f5ff55;
+    --glow-v:0 0 8px #9b5cff,0 0 24px #9b5cff55;
+    --glow-m:0 0 8px #ff2d78,0 0 24px #ff2d7855;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   /* html/body remplissent l'écran réel de qui visite la page ; .screen
      garde son format fixe 1920x1080 et se met à l'échelle via JS plus
      bas, pour que le rendu reste identique sur téléphone comme sur PC. */
-  html,body{width:100 %;height:100 vh;overflow:hidden;background:var (--bg);font-family:'Rajdhani',sans-serif;color:var (--white);display:flex;align-items:center;justify-content:center;}
+  html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--white);display:flex;align-items:center;justify-content:center;}
 
-  .screen{position:relative;width:1920 px;height:1080 px;background:var (--bg);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transform-origin:center center;}
+  .screen{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transform-origin:center center;}
 
   /* grille de fond */
-  .grid-bg{position:absolute;inset:0;background-image:linear-gradient (rgba (0,245,255,.04) 1 px,transparent 1 px),linear-gradient (90 deg,rgba (0,245,255,.04) 1 px,transparent 1 px);background-size:64 px 64 px;}
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,245,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.04) 1px,transparent 1px);background-size:64px 64px;}
 
   /* orbs scintillants */
-  .orb{position:absolute;border-radius:50 %;pointer-events:none;will-change:opacity,filter;}
-  .orb-c{width:55 %;aspect-ratio:1;background:var (--cyan);top:-25 %;right:-20 %;filter:blur (200 px);opacity:.2;animation:scintille 5 s ease-in-out infinite;}
-  .orb-v{width:40 %;aspect-ratio:1;background:var (--violet);bottom:-20 %;left:-10 %;filter:blur (200 px);opacity:.18;animation:scintille 5 s ease-in-out infinite reverse;}
-  @keyframes scintille{0 %,100 %{opacity:.12;filter:blur (220 px);}50 %{opacity:.28;filter:blur (180 px);}}
+  .orb{position:absolute;border-radius:50%;pointer-events:none;will-change:opacity,filter;}
+  .orb-c{width:55%;aspect-ratio:1;background:var(--cyan);top:-25%;right:-20%;filter:blur(200px);opacity:.2;animation:scintille 5s ease-in-out infinite;}
+  .orb-v{width:40%;aspect-ratio:1;background:var(--violet);bottom:-20%;left:-10%;filter:blur(200px);opacity:.18;animation:scintille 5s ease-in-out infinite reverse;}
+  @keyframes scintille{0%,100%{opacity:.12;filter:blur(220px);}50%{opacity:.28;filter:blur(180px);}}
 
   /* anneaux de pulse (même que starting) */
-  .pulse-ring{position:absolute;width:700 px;height:700 px;border-radius:50 %;border:1 px solid var (--cyan);animation:pulseRing 8 s cubic-bezier (0.19,1,0.22,1) infinite;box-shadow:inset 0 0 40 px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
-  .pulse-ring:nth-child(4){animation-delay:-2.67 s;}
-  .pulse-ring:nth-child(5){animation-delay:-5.33 s;}
-  @keyframes pulseRing{0 %{transform:scale (.3);opacity:.5}40 %{opacity:.32}100 %{transform:scale (2);opacity:0}}
+  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 8s cubic-bezier(0.19,1,0.22,1) infinite;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
+  .pulse-ring:nth-child(4){animation-delay:-2.67s;}
+  .pulse-ring:nth-child(5){animation-delay:-5.33s;}
+  @keyframes pulseRing{0%{transform:scale(.3);opacity:.5}40%{opacity:.32}100%{transform:scale(2);opacity:0}}
 
   /* scan line */
-  .scan{position:absolute;left:0;right:0;height:1 px;background:linear-gradient (90 deg,transparent,rgba (0,245,255,.6),transparent);animation:scanMove 5 s linear infinite;z-index:1;}
-  @keyframes scanMove{0 %{top:-2 px;opacity:0}5 %{opacity:1}95 %{opacity:1}100 %{top:100 %;opacity:0}}
+  .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,.6),transparent);animation:scanMove 5s linear infinite;z-index:1;}
+  @keyframes scanMove{0%{top:-2px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
 
   /* ── CONTENU ── */
-  .content{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:48 px;margin-top:-70 px;}
+  .content{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:48px;margin-top:-70px;}
 
   /* header */
   .header{text-align:center;}
-  .eyebrow{font-size:.85 rem;letter-spacing:.55 em;text-transform:uppercase;color:var (--cyan);text-shadow:var (--glow-c);margin-bottom:14 px;}
-  .main-title{font-family:'Orbitron',sans-serif;font-size:3.8 rem;font-weight:900;color:var (--white);line-height:1;}
-  .main-title em{color: var (--cyan);font-style:normal;text-shadow:var (--glow-c);}
+  .eyebrow{font-size:.85rem;letter-spacing:.55em;text-transform:uppercase;color:var(--cyan);text-shadow:var(--glow-c);margin-bottom:14px;}
+  .main-title{font-family:'Orbitron',sans-serif;font-size:3.8rem;font-weight:900;color:var(--white);line-height:1;}
+  .main-title em{color:var(--cyan);font-style:normal;text-shadow:var(--glow-c);}
 
   /* ligne séparatrice */
-  .sep{width:600 px;height:1 px;background:linear-gradient (90deg ,transparent,var (--violet),transparent);box-shadow:var (--glow-v);}
+  .sep{width:600px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);box-shadow:var(--glow-v);}
 
   /* ── GRILLE PLANNING — 2 rangées empilées ── */
-  .planning-wrap{display:flex;flex-direction:column;gap:22 px;align-items:center;}
-  .planning{display:flex;gap:22 px;align-items:stretch;justify-content:center;}
+  .planning-wrap{display:flex;flex-direction:column;gap:22px;align-items:center;}
+  .planning{display:flex;gap:22px;align-items:stretch;justify-content:center;}
 
   /* ══════════════════════
      CARTE JOUR
@@ -70,9 +70,9 @@
   ══════════════════════ */
   .card{
     position:relative;
-    width:280 px;
-    background:linear-gradient (180 deg,#0d1220,#080c18);
-    border:1 px solid #1a2540;
+    width:280px;
+    background:linear-gradient(180deg,#0d1220,#080c18);
+    border:1px solid #1a2540;
     overflow:hidden;
     display:flex;flex-direction:column;
     clip-path:polygon(10px 0%,calc(100% - 10px) 0%,100% 10px,100% 100%,0% 100%,0% 10px);
