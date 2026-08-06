@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AULIT42369 – Planning</title>
+
+<!-- Aperçu Discord / réseaux sociaux -->
+<meta property="og:title" content="Planning Stream — AULIT42369">
+<meta property="og:description" content="Le programme de la semaine, mis à jour régulièrement.">
+<meta property="og:url" content="https://aulit42369.github.io/planning/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#00f5ff">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#070a10; --cyan:#00f5ff; --violet:#9b5cff; --magenta:#ff2d78;
+    --white:#e8eaf6; --dim:#4a5568;
+    --glow-c:0 0 8px #00f5ff,0 0 24px #00f5ff55;
+    --glow-v:0 0 8px #9b5cff,0 0 24px #9b5cff55;
+    --glow-m:0 0 8px #ff2d78,0 0 24px #ff2d7855;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  /* html/body remplissent l'écran réel de qui visite la page ; .screen
+     garde son format fixe 1920x1080 et se met à l'échelle via JS plus
+     bas, pour que le rendu reste identique sur téléphone comme sur PC. */
+  html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--white);display:flex;align-items:center;justify-content:center;}
+
+  .screen{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transform-origin:center center;}
+
+  /* grille de fond */
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,245,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.04) 1px,transparent 1px);background-size:64px 64px;}
+
+  /* orbs scintillants */
+  .orb{position:absolute;border-radius:50%;pointer-events:none;will-change:opacity,filter;}
+  .orb-c{width:55%;aspect-ratio:1;background:var(--cyan);top:-25%;right:-20%;filter:blur(200px);opacity:.2;animation:scintille 5s ease-in-out infinite;}
+  .orb-v{width:40%;aspect-ratio:1;background:var(--violet);bottom:-20%;left:-10%;filter:blur(200px);opacity:.18;animation:scintille 5s ease-in-out infinite reverse;}
+  @keyframes scintille{0%,100%{opacity:.12;filter:blur(220px);}50%{opacity:.28;filter:blur(180px);}}
+
+  /* anneaux de pulse (même que starting) */
+  .pulse-ring{position:absolute;width:700px;height:700px;border-radius:50%;border:1px solid var(--cyan);animation:pulseRing 8s cubic-bezier(0.19,1,0.22,1) infinite;box-shadow:inset 0 0 40px #00f5ff0a;opacity:.4;will-change:transform,opacity;}
+  .pulse-ring:nth-child(4){animation-delay:-2.67s;}
+  .pulse-ring:nth-child(5){animation-delay:-5.33s;}
+  @keyframes pulseRing{0%{transform:scale(.3);opacity:.5}40%{opacity:.32}100%{transform:scale(2);opacity:0}}
+
+  /* scan line */
+  .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,.6),transparent);animation:scanMove 5s linear infinite;z-index:1;}
+  @keyframes scanMove{0%{top:-2px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
+
+  /* ── CONTENU ── */
+  .content{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:48px;margin-top:-70px;}
+
+  /* header */
+  .header{text-align:center;}
+  .eyebrow{font-size:.85rem;letter-spacing:.55em;text-transform:uppercase;color:var(--cyan);text-shadow:var(--glow-c);margin-bottom:14px;}
+  .main-title{font-family:'Orbitron',sans-serif;font-size:3.8rem;font-weight:900;color:var(--white);line-height:1;}
+  .main-title em{color:var(--cyan);font-style:normal;text-shadow:var(--glow-c);}
+
+  /* ligne séparatrice */
+  .sep{width:600px;height:1px;background:linear-gradient(90deg,transparent,var(--violet),transparent);box-shadow:var(--glow-v);}
+
+  /* ── GRILLE PLANNING — 2 rangées empilées ── */
+  .planning-wrap{display:flex;flex-direction:column;gap:22px;align-items:center;}
+  .planning{display:flex;gap:22px;align-items:stretch;justify-content:center;}
+
+  /* ══════════════════════
+     CARTE JOUR
+     ✏️ Pour modifier : éditez les données dans le JS en bas
+  ══════════════════════ */
+  .card{
+    position:relative;
+    width:280px;
+    background:linear-gradient(180deg,#0d1220,#080c18);
+    border:1px solid #1a2540;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    clip-path:polygon(10px 0%,calc(100% - 10px) 0%,100% 10px,100% 100%,0% 100%,0% 10px);
+  }
+  /* ligne du haut colorée */
+  .card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--card-color),transparent);
+    box-shadow:0 0 8px var(--card-color);
+    z-index:2;
+  }
+  /* coin bas droite */
+  .card::after{
+    content:'';position:absolute;bottom:0;right:0;
+    width:14px;height:14px;
+    border-bottom:1px solid var(--card-color);
+    border-right:1px solid var(--card-color);
+    opacity:.5;z-index:2;
+  }
+
+  /* header carte */
+  .card-head{
+    padding:20px 22px 16px;
+    border-bottom:1px solid #1a2540;
+    flex-shrink:0;
+  }
+  .card-day{
+    font-family:'Orbitron',sans-serif;
+    font-size:1.15rem;font-weight:900;
+    color:var(--white);letter-spacing:.07em;
+    text-transform:uppercase;
+  }
+  .card-date{
+    font-size:.85rem;letter-spacing:.13em;
+    color:var(--card-color);
+    text-shadow:0 0 8px var(--card-color);
+    margin-top:5px;text-transform:uppercase;
+  }
+
+  /* body carte */
+  .card-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px;flex:1;}
+  .card-row{display:flex;align-items:center;gap:12px;}
+  .card-icon{font-size:1.3rem;flex-shrink:0;width:26px;text-align:center;}
+  .card-info{font-size:.92rem;color:#8892a8;line-height:1.4;}
+  .card-info strong{color:var(--white);display:block;font-size:1.02rem;letter-spacing:.02em;}
+
+  /* badge OFF */
+  .card.off{opacity:.45;}
+  .card.off .card-body{align-items:center;justify-content:center;}
+  .off-label{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:.25em;color:var(--dim);text-transform:uppercase;}
+
+  /* badge AUJOURD'HUI */
+  .badge-today{
+    display:inline-block;
+    font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+    padding:4px 10px;margin-top:8px;
+    background:var(--card-color);
+    color:var(--bg);
+    font-family:'Orbitron',sans-serif;font-weight:700;
+    border-radius:1px;
+  }
+
+  /* barre de progression déco bas de carte */
+  .card-prog{height:2px;background:#1a2540;margin:0 22px 18px;border-radius:2px;overflow:hidden;}
+  .card-prog-fill{height:100%;width:100%;transform-origin:left center;background:linear-gradient(90deg,var(--violet),var(--card-color));box-shadow:0 0 6px var(--card-color);animation:fillAnim 4.5s cubic-bezier(0.45,0,0.55,1) infinite alternate;will-change:transform;}
+  @keyframes fillAnim{0%{transform:scaleX(.15)}50%{transform:scaleX(.55)}100%{transform:scaleX(.92)}}
+
+  /* bas de page */
+  .bottom-name{position:absolute;bottom:5%;left:0;right:0;text-align:center;z-index:3;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.3em;color:var(--dim);}
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="grid-bg"></div>
+  <div class="orb orb-c"></div>
+  <div class="orb orb-v"></div>
+  <div class="pulse-ring"></div>
+  <div class="pulse-ring"></div>
+  <div class="pulse-ring"></div>
+  <div class="scan"></div>
+
+  <div class="content">
+    <div class="header">
+      <div class="eyebrow">// Programme de la semaine</div>
+      <div class="main-title">PLANNING <em>STREAM</em></div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ══ PLANNING — généré par JS, réparti sur 2 rangées (3 + 4) ══ -->
+    <div class="planning-wrap">
+      <div class="planning" id="planning-row-1"></div>
+      <div class="planning" id="planning-row-2"></div>
+    </div>
+  </div>
+
+  <div class="bottom-name">AULIT42369 &nbsp;·&nbsp; TWITCH.TV</div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   ✏️  MODIFIE TON PLANNING ICI
+   ────────────────────────────────────────────────────────
+   Chaque objet = un jour de la semaine
+   Champs :
+     day    → nom du jour
+     on     → true = stream prévu | false = pas de stream
+     time   → horaire de début
+     end    → horaire de fin
+     game   → jeu prévu
+     color  → couleur du cadre (hex ou var CSS)
+
+   Tu peux ajouter / supprimer des jours librement.
+════════════════════════════════════════════════════════ */
+const PLANNING = [
+  {
+    day:   'Lundi',
+    on:    false,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'A Déterminer'
+    color: '#00f5ff'
+  },
+  {
+    day:   'Mardi',
+    on:    false,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'A Déterminer'
+    color: '#4a5568'
+  },
+  {
+    day:   'Mercredi',
+    on:    false,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'A Déterminer'
+    color: '#9b5cff'
+  },
+  {
+    day:   'Jeudi',
+    on:    true,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'A Déterminer',
+    color: '#4a5568'
+  },
+  {
+    day:   'Vendredi',
+    on:    true,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'Cyberpunk ou Jeux Coop',
+    color: '#00f5ff'
+  },
+  {
+    day:   'Samedi',
+    on:    true,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'Jeux Coop',
+    color: '#ff2d78'
+  },
+  {
+    day:   'Dimanche',
+    on:    true,
+    time:  '21:00',
+    end:   '00:00',
+    game:  'A Déterminer',
+    color: '#4a5568'
+  }
+];
+
+/* ── Détection du jour actuel ── */
+const JOURS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const aujourdhui = JOURS[new Date().getDay()];
+
+/* ── Génération des cartes, réparties 3 + 4 sur deux rangées ── */
+const row1 = document.getElementById('planning-row-1');
+const row2 = document.getElementById('planning-row-2');
+
+function renderCard(item, container) {
+  const isToday = item.day === aujourdhui;
+  const card = document.createElement('div');
+  card.className = 'card' + (item.on ? '' : ' off');
+  card.style.setProperty('--card-color', item.color);
+
+  if (item.on) {
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-day">${item.day}</div>
+        <div class="card-date">${item.time} → ${item.end}</div>
+        ${isToday ? '<span class="badge-today">● Aujourd\'hui</span>' : ''}
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-icon">🎮</div>
+          <div class="card-info">
+            <strong>${item.game}</strong>
+            Jeu du jour
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-icon">🕐</div>
+          <div class="card-info">
+            <strong>${item.time} – ${item.end}</strong>
+            Heure FR (CET)
+          </div>
+        </div>
+      </div>
+      <div class="card-prog"><div class="card-prog-fill"></div></div>
+    `;
+  } else {
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-day">${item.day}</div>
+        <div class="card-date">Pas de stream</div>
+      </div>
+      <div class="card-body">
+        <div class="off-label">— Repos —</div>
+      </div>
+    `;
+  }
+
+  container.appendChild(card);
+}
+
+PLANNING.slice(0, 3).forEach(item => renderCard(item, row1));
+PLANNING.slice(3).forEach(item => renderCard(item, row2));
+
+/* ── Mise à l'échelle responsive : garde le rendu 1920x1080
+   identique en hauteur. Sur un écran plus large que 16:9 (PC), le
+   canevas s'élargit pour combler les côtés (la grille de cartes se
+   centre et passe sur 2 lignes toute seule si besoin) ; sur un
+   écran plus étroit (téléphone), on revient au calage classique
+   pour ne jamais déborder. ── */
+function fitScreen(){
+  const screen = document.querySelector('.screen');
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const scaleH = vh / 1080;
+  const scaleW = vw / 1920;
+
+  if (scaleW > scaleH) {
+    screen.style.width = (vw / scaleH) + 'px';
+    screen.style.transform = `scale(${scaleH})`;
+  } else {
+    screen.style.width = '1920px';
+    screen.style.transform = `scale(${Math.min(scaleW, scaleH)})`;
+  }
+}
+window.addEventListener('resize', fitScreen);
+fitScreen();
+</script>
+</body>
+</html>
